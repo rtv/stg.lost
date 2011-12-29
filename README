@@ -4,7 +4,7 @@ stg.idw  README
 
 ** NOTE: this code in development and should not be used for anything at all. It probably does not work. These instructions are probably wrong. **
 
-An implementation of the Improved Dynamic Window Approach for local obstacle avoidance, based on [Berti et al 2008].
+An implementation of Localization Space Trails (LOST) for robot foraging [Vaughan et al 2001]
 
  - rtv (vaughan@sfu.ca)  2011.12.29
 
@@ -31,13 +31,12 @@ $ export STAGEPATH=.
 
 Now run Stage with the test world:
 
-$ stage worlds/dw.world
+$ stage worlds/lost.world
 
 
 References
 ----------
-[Berti et al 2008]  IMPROVED DYNAMIC WINDOW APPROACH BY USING LYAPUNOV STABILITY CRITERIA.  
-                    H. BERTI, A.D. SAPPA and O.E. AGAMENNONI. Journal of Latin American Applied Research 38:289-298 (2008)
+[Vaughan et al 2001] LOST: localization-space trails for robot teams. R T Vaughan, K Stoy, G S Sukhatme, M J Mataric in IEEE Transactions on Robotics and Automation (2002)
 
 
 Notes on setting up your environment

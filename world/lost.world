@@ -1,0 +1,169 @@
+
+# FASR demo world 
+# Authors: Richard Vaughan
+include "pioneer.inc"
+include "map.inc"
+include "sick.inc"
+
+speedup 10.000
+paused 0
+
+# time at which to pause (in GUI mode) or quit (in headless mode) the simulation
+quit_time 3600 # 1 hour of simulated time
+#quit_time 1800 # 30 mins of simulated time
+
+resolution 0.02
+
+threads 4
+
+# configure the GUI window
+window
+( 
+  size [ 683 713 ] 
+  center [ 0.212 -1.091 ] 
+  rotate [ 0.000 0.000 ]
+  scale 31.732
+  
+  show_data 1
+  show_flags 1
+  # show_ranger_ranges 0
+  # interval 50
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "cave" 
+  pose [0.000 0.000 0.000 0.000]
+  size [16.000 16.000 0.600]
+ bitmap "cave.png"
+ 
+)
+
+zone
+(
+  size [ 2.000 2.000 0.000 ]
+  color "green"
+  pose [ -7.000 -7.000 0.000 0.000 ]
+  name "source"
+  ctrl "source 1 1"
+)
+
+zone
+(
+  size [ 2.000 2.000 0.000 ]
+  color "red"
+  pose [ 7.000 7.000 0.000 0.000 ]
+  name "sink"
+  ctrl "sink"
+)
+
+
+define charging_bump model
+(
+  pose [0.240 0.000 -0.100 0.000 ] 
+  size [0.120 0.050 0.100] 
+  take_watts 2000.0 
+  color "orange" 
+  obstacle_return 0
+)
+
+define charge_station model
+(  
+  size [ 0.100 0.300 0.100 ]
+  color "purple"
+  
+  # side blocks to restrict view angle
+  model( color "purple" size [0.100 0.050 0.250] pose [ 0.000 0.100 0.000 0.000 ] )
+  model( color "purple" size [0.100 0.050 0.250] pose [ 0.000 -0.100 0.000 0.000 ] ) 
+
+  # the charging block
+  model( 
+    pose [ 0.010 0.000 0.000 0.000 ]
+    color "yellow"
+    size [ 0.050 0.200 0.100 ]
+    joules -1  # provides infinite energy
+    give_watts 2000 
+    fiducial_return 2 # look for this in the fiducial senso
+	 
+	 alwayson 1 # so we give charge without any explicit subscriber
+   )
+
+)
+
+charge_station(  pose [ 7.908 -2.510 0 0 ] )
+charge_station(  pose [ 7.920 -3.847 0 0 ] )
+charge_station(  pose [ 7.449 -4.974 0 -40.107 ] )
+charge_station(  pose [ 14.217 -1.789 0 31.513 ] )
+charge_station(  pose [ 5.162 -0.814 0 88.809 ] )
+
+charge_station(  pose [ 3.927 -0.693 0 88.808 ] )
+charge_station(  pose [ 6.427 -0.964 0 74.484 ] )
+#charge_station(  pose [ 4.964 -0.752 0 88.808 ] )
+#charge_station(  pose [ 3.832 -0.704 0 91.673 ] )
+#charge_station(  pose [ 7.949 -4.019 0 0 ] )
+
+
+define autorob pioneer2dx		  
+(		 
+ sickbase( sensor( samples 32 range [0 3] fov 180 color_rgba [ 0 0 1 0.15 ] ) 
+  				 ranger_return 2.000 watts 30 )
+
+ ctrl "lost"
+# kjoules 400 
+# joules_capacity 400000 
+ fiducial_return 0
+ charging_bump( fiducial( range_max 5 pose [ 0.000 0.000 -0.100 0.000 ] ) )
+
+ # small speed optimization
+ # trail_length 0
+)
+
+autorob( pose [7.496 6.009 0.000 -165.164] kjoules 500 name "r0" )
+autorob( pose [6.390 7.482 0.000 111.755] kjoules 500 name "r1" )
+autorob( pose [6.447 4.313 0.000 -116.522] kjoules 600 )
+autorob( pose [5.944 6.289 0.000 146.129] kjoules 400 )
+autorob( pose [5.784 7.478 0.000 -168.030] kjoules 800 )
+
+autorob( pose [7.469 6.748 0.000 114.621] kjoules 600 )
+autorob( pose [5.988 5.068 0.000 169.052] kjoules 500 )
+autorob( pose [4.189 6.611 0.000 179.503] kjoules 80 )
+autorob( pose [5.004 6.289 0.000 -126.065] kjoules 800 )
+autorob( pose [5.166 5.363 0.000 168.031] kjoules 600 )
+
+autorob( pose [7.501 7.343 0.000 74.514] kjoules 500 )
+autorob( pose [4.143 7.289 0.000 -119.356] kjoules 700 )
+autorob( pose [5.056 7.411 0.000 154.712]  kjoules 900)
+autorob( pose [6.484 6.568 0.000 120.338] kjoules 900)
+autorob( pose [7.500 5.407 0.000 -83.051] kjoules 500)
+
+autorob( pose [7.028 6.347 0.000 -126.077] kjoules 850)
+autorob( pose [6.234 5.781 0.000 -176.624] kjoules 850)
+autorob( pose [6.992 7.504 0.000 111.753] kjoules 750)
+autorob( pose [7.329 4.268 0.000 126.081] kjoules 650)
+autorob( pose [6.886 5.508 0.000 -134.644] kjoules 550)
+
+#autorob( pose [6.545 7.366 0 2.937] kjoules 350 )
+#autorob( pose [7.237 7.533 0 34.450] kjoules 350)
+#autorob( pose [3.875 6.533 0 134.717] kjoules 350)
+#autorob( pose [3.944 4.674 0 -103.060] kjoules 350)
+#autorob( pose [4.776 5.792 0 -103.060] kjoules 350)
+
+#autorob( pose [3.212 3.779 0 -103.060] kjoules 150)
+#autorob( pose [2.982 6.577 0 -103.060] kjoules 150)
+#autorob( pose [3.189 5.168 0 -103.060] kjoules 150)
+#autorob( pose [2.027 6.472 0 -103.060] kjoules 150)
+#autorob( pose [3.897 5.537 0 -103.060] kjoules 150)
+
+#autorob( pose [4.974 4.800 0 -103.060] kjoules 50)
+#autorob( pose [2.225 7.350 0 -103.060] kjoules 50 )
+#autorob( pose [5.683 4.431 0 -103.060] kjoules 50 )
+#autorob( pose [2.055 2.901 0 -103.060] kjoules 50 )
+#autorob( pose [1.498 7.310 0 -103.060] kjoules 50 )
+
+#autorob( pose [0.366 6.989 0 -103.060] kjoules 200)
+#autorob( pose [5.215 7.601 0 -103.060] kjoules 200)
+#autorob( pose [6.714 6.392 0 -103.060] kjoules 200)
+#autorob( pose [7.418 5.581 0 -103.060] kjoules 200)
+#auto rob( pose [2.523 4.878 0 -103.060] kjoules 200)
+
