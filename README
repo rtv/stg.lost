@@ -31,7 +31,7 @@ $ export STAGEPATH=.
 
 Now run Stage with the test world:
 
-$ stage worlds/lost.world
+$ stage world/lost.world
 
 
 References
